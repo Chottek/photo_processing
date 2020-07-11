@@ -1,4 +1,6 @@
-public class Handler {
+package pl.fox.photo;
+
+public class Handler { //Class made to pass data through classes without StackOverFlow error
 
     private Processor processor;
 
