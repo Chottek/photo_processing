@@ -28,20 +28,22 @@ public class ImgReader {
     public ImgReader(Handler handler) {
         this.handler = handler;
         images = new ArrayList<>();
-        readPhotos(new File(handler.getProcessor().getInputFolder()));
+        readPhotos(new File(handler.getProcessor().getConfigHandler().getInputFolder()));
     }
 
     public void readPhotos(File dir){ //Method for reading photos from given directory
         if(dir.isDirectory()){     // Checking if given path is a directory
             if(dir.listFiles().length > 0){   // Checking if given directory is not empty
+                System.out.println("\nREADING DIRECTORY \""+ dir.getName() +"\"");
                 for (File f : dir.listFiles(FILTER)){
                     try{
-                        images.add(ImageIO.read(f));   // Reading images and adding them into List
+                        images.add(ImageIO.read(f)); // Reading images and adding them into List
                     }catch(IOException e){
                         System.err.println("There was a problem reading image " + f.getName());
                         System.exit(1);
                     }
                 }
+                System.out.println("Got " + dir.listFiles(FILTER).length + " images");
             }else{
                 System.err.println("Given directory \"" + dir.getName() + "\" is empty");
                 System.exit(1);
