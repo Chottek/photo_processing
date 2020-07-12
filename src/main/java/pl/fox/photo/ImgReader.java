@@ -10,7 +10,7 @@ public class ImgReader {
 
     private Handler handler;
 
-    private static final String[] EXTENSIONS = new String[]{ "png", "jpg" }; //handled extensions
+    private static final String[] EXTENSIONS = new String[]{ "png", "jpg", "jpeg" }; //handled extensions
 
     private static final FilenameFilter FILTER = (dir, name) -> { // overridden method filtering extensions
         for(String s : EXTENSIONS){
