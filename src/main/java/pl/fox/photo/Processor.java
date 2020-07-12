@@ -16,11 +16,11 @@ public class Processor {
     }
 
     public void process(int borderValue){
-        System.out.println("Border value between bright and dark was set to " + borderValue + "\n");
+        System.out.println("Border value was set to " + borderValue + "\n");
         List<File> photos = imgReader.getImages();
         for(File f: photos){
             ProcessorThread t = new ProcessorThread(f, borderValue, configHandler.getOutputFolder());
-            t.run();
+            new Thread(t).start();
         }
     }
 
