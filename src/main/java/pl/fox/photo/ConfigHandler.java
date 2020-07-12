@@ -63,7 +63,7 @@ public class ConfigHandler {
             if (CONFIG_FILE.createNewFile()) { // if file doesn't exist, create a new default config file
                 FileWriter myWriter = new FileWriter(FILENAME);
                 myWriter.write("#CONFIG\n");
-                myWriter.write("#\n");
+                myWriter.write("#Specify input and output directory here\n");
                 myWriter.write("IN:" + IN + "\n");
                 myWriter.write("OUT:"+ OUT + "\n");     //Write default values to config file
                 myWriter.close();

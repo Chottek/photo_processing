@@ -1,7 +1,8 @@
 package pl.fox.photo;
 
-
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.*;
 import java.util.List;
 
 public class Processor {
@@ -17,10 +18,17 @@ public class Processor {
     }
 
     public void process(int borderValue){
-        System.out.println("Border value between bright and dark was set to " + borderValue);
-        List<BufferedImage> photos = imgReader.getImages();
-        for(BufferedImage b: photos){
-            System.out.println(b.getWidth() + ", " + b.getHeight());
+        System.out.println("Border value between bright and dark was set to " + borderValue + "\n");
+        List<File> photos = imgReader.getImages();
+        for(File f: photos){
+
+            BufferedImage b;
+            try {
+                b = ImageIO.read(f); // reading BufferedImage from File path
+            } catch (IOException e) {
+                System.err.println("There was a problem reading " + f.getName());
+                continue;
+            }
 
             long sum = 0;
             int iter = 0;
@@ -31,26 +39,45 @@ public class Processor {
                 }
             }
 
-            //765 - 100%
+            // 765 - 100%  <- (255 * 3)
             // 99 - x %
             // x = (100 * 99) / 765
 
-            System.out.println(100 - (100 * (sum / iter)) / 765 + "%");
+            int percentage = (int) (100 - (100 * (sum / iter)) / 765);
 
+            if(percentage > borderValue){
+                copy(f, b, "dark", percentage);
+            }else{
+                copy(f, b, "bright", percentage);
+            }
+
+            System.out.println("Processed " + f.getName());
         }
     }
 
-    //TODO: Implement image copying with metadata
 
+    private void copy(File f, BufferedImage b, String db, int percentage){
+        String name = getPureName(f.getName());  // get name without extension
+        String extension = f.getName().substring(f.getName().lastIndexOf(".") + 1); // get extension
+        try { // copy images to given output directory with suitable names
+            ImageIO.write(b, extension, new File(configHandler.getOutputFolder() +
+                                    "/" + name + "_" + db + "_" + percentage + "." + extension));
+        } catch (IOException e) {
+            System.err.println("There was a problem copying file " + f.getName() + " to output directory");
+        }
+    }
+
+    private String getPureName(String s){
+        int pos = s.lastIndexOf(".");
+        return s.substring(0, pos);
+    }
 
     private int calculateRGB(int pixel) {
-//        int alpha = (pixel >> 24) & 0xff;
         int r = (pixel >> 16) & 0xff;
         int g = (pixel >> 8) & 0xff;
         int b = (pixel) & 0xff;
 
         return r + g + b;
-//        return (int) Math.floor((r + g + b) / 3);
     }
 
     public ConfigHandler getConfigHandler(){

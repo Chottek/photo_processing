@@ -1,11 +1,9 @@
 package pl.fox.photo;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ImgReader {
@@ -14,7 +12,7 @@ public class ImgReader {
 
     private static final String[] EXTENSIONS = new String[]{ "png", "jpg" }; //handled extensions
 
-    private static final FilenameFilter FILTER = (dir, name) -> { //overriden method filtering extensions
+    private static final FilenameFilter FILTER = (dir, name) -> { // overridden method filtering extensions
         for(String s : EXTENSIONS){
             if(name.endsWith("." + s)){
                 return true;
@@ -23,7 +21,7 @@ public class ImgReader {
         return false;
     };
 
-    private List<BufferedImage> images;
+    private List<File> images;
 
     public ImgReader(Handler handler) {
         this.handler = handler;
@@ -35,27 +33,21 @@ public class ImgReader {
         if(dir.isDirectory()){     // Checking if given path is a directory
             if(dir.listFiles().length > 0){   // Checking if given directory is not empty
                 System.out.println("\nREADING DIRECTORY \""+ dir.getName() +"\"");
-                for (File f : dir.listFiles(FILTER)){
-                    try{
-                        images.add(ImageIO.read(f)); // Reading images and adding them into List
-                    }catch(IOException e){
-                        System.err.println("There was a problem reading image " + f.getName());
-                        System.exit(1);
-                    }
-                }
+
+                images.addAll(Arrays.asList(dir.listFiles(FILTER))); // Reading images and adding them into List
+
                 System.out.println("Got " + dir.listFiles(FILTER).length + " images");
             }else{
                 System.err.println("Given directory \"" + dir.getName() + "\" is empty");
-                System.exit(1);
+                System.exit(1);  // exit if input directory is empty
             }
         }else{
             System.err.println("Given directory \"" + dir.getName() + "\" doesn't exist");
-            System.exit(1);
+            System.exit(1); // exit if input directory doesn't exist
         }
     }
 
-
-    public List<BufferedImage> getImages(){
+    public List<File> getImages(){
         return images;
     }
 
