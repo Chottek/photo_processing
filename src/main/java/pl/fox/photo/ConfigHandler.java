@@ -22,6 +22,7 @@ public class ConfigHandler {
 
         createConf();
         readConf();
+        checkOutputFolder();
     }
 
     private void readConf(){
@@ -76,6 +77,15 @@ public class ConfigHandler {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void checkOutputFolder(){
+        File out = new File(OUT);
+        if(!out.exists()){
+            if(out.mkdirs()){
+                System.out.println("Directory \""+ out.getName() +"\" made");
+            }
         }
     }
 

@@ -54,6 +54,7 @@ public class ImgReader {
         }
     }
 
+
     public List<BufferedImage> getImages(){
         return images;
     }
