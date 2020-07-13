@@ -1,5 +1,8 @@
 package pl.fox.photo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -9,6 +12,8 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class ConfigHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigHandler.class);
 
     private static final String FILENAME = "config.conf"; //default config file name
     private static final File CONFIG_FILE = new File(FILENAME);
@@ -26,7 +31,7 @@ public class ConfigHandler {
         try{
             Scanner sc = new Scanner(CONFIG_FILE); //read config (set in and output folders to variables)
             String s;
-            System.out.println("READING CONFIG");
+            LOG.info("READING CONFIG");
             while (sc.hasNextLine()) {
                 s = sc.nextLine();
 
@@ -37,20 +42,20 @@ public class ConfigHandler {
                 if(s.contains("IN:")){
                     IN = s.replace("IN:", "");
                     IN = IN.replaceAll(" ", ""); // make sure there are no whitespaces
-                    System.out.println("Set input folder as: " + IN);
+                    LOG.info("Set input directory as {}", IN);
                 }
                 if(s.contains("OUT:")){
                     OUT = s.replace("OUT:", "");
                     OUT = OUT.replaceAll(" ", ""); // make sure there are no whitespaces
-                    System.out.println("Set output folder as: "+ OUT);
+                    LOG.info("Set output directory as {}", OUT);
                 }
                 if(s.contains("MAX_THREADS:")){
                     MAX_THREADS = Integer.parseInt(s.replace("MAX_THREADS:", ""));
-                    System.out.println("Set maximum threads as: " + MAX_THREADS);
+                    LOG.info("Set maximum threads to {}", MAX_THREADS);
                 }
             }
         }catch(FileNotFoundException f){
-            System.err.println("There was an error reading config file");
+            LOG.error("There was an error reading config file! Setting default values");
         }
     }
 
@@ -62,7 +67,7 @@ public class ConfigHandler {
                     firstLine = fileReader.nextLine();  //Get first line of the file to check if it's valid
                 }
                 if(!firstLine.equals("#CONFIG")){  //If first line equals "#CONFIG", the file is valid
-                    System.out.println("First line is not config, deleting");
+                    LOG.error("First line is not config! Deleting");
                     Files.deleteIfExists(Paths.get(FILENAME)); //else -> delete file and proceed to creating new
                 }
             }
@@ -75,11 +80,11 @@ public class ConfigHandler {
                 myWriter.write("#\n#\n#Specify maximum threads to run during image processing\n");
                 myWriter.write("MAX_THREADS:" + MAX_THREADS);
                 myWriter.close();
-                System.out.println("A default config file has been created " +
+                LOG.info("A default config file has been created " +
                         "with values:\n" +
                         "Input folder: " + IN + "\n" +
                         "Output folder: " + OUT + "\n");
-                System.out.println("You can make changes to config or copy photos to input directory\n" +
+                LOG.info("You can make changes to config or copy photos to input directory\n" +
                         "RESTART THE PROGRAM WHEN YOU'RE DONE");
                 System.exit(0);
             }
@@ -92,7 +97,7 @@ public class ConfigHandler {
         File out = new File(OUT);
         if(!out.exists()){
             if(out.mkdirs()){
-                System.out.println("Directory \""+ out.getName() +"\" made");
+                LOG.info("Directory \"{}\" made", out.getName());
             }
         }
     }

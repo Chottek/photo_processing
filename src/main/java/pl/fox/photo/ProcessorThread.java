@@ -1,5 +1,8 @@
 package pl.fox.photo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -7,14 +10,18 @@ import java.io.IOException;
 
 public class ProcessorThread implements Runnable {
 
-    private File f;
-    private int borderValue;
-    private String outputFolder;
+    private static final Logger LOG = LoggerFactory.getLogger(ProcessorThread.class);
 
-    public ProcessorThread(File f, int borderValue, String outputFolder) {
+    private final File f;
+    private final int borderValue;
+    private final String outputFolder;
+    private final Handler handler;
+
+    public ProcessorThread(File f, int borderValue, String outputFolder, Handler handler) {
         this.f = f;
         this.borderValue = borderValue;
         this.outputFolder = outputFolder;
+        this.handler = handler;
     }
 
     @Override
@@ -23,7 +30,7 @@ public class ProcessorThread implements Runnable {
         try {
             b = ImageIO.read(f); // reading BufferedImage from File path
         } catch (IOException e) {
-            System.err.println("There was a problem reading " + f.getName());
+            LOG.error("There was a problem reading {}", f.getName());
             return;
         }
 
@@ -47,7 +54,7 @@ public class ProcessorThread implements Runnable {
             copy(f, b, "bright", percentage);
         }
 
-       System.out.println("Processed " + f.getName());
+        handler.getImageFileProcessor().removeImage(f);
     }
 
     private void copy(File f, BufferedImage b, String db, int percentage){
@@ -62,8 +69,10 @@ public class ProcessorThread implements Runnable {
 
             ImageIO.write(b, extension, new File(pathname));
         } catch (IOException e) {
-            System.err.println("There was a problem copying file " + f.getName() + " to output directory");
+            LOG.error("There was a problem copying {} to output directory", f.getName());
+            return;
         }
+        LOG.info("Processed {}", f.getName());
     }
 
     private String getPureName(String s){
