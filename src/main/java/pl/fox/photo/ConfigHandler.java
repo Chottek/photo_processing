@@ -10,16 +10,13 @@ import java.util.Scanner;
 
 public class ConfigHandler {
 
-    private Handler handler;
-
     private static final String FILENAME = "config.conf"; //default config file name
     private static final File CONFIG_FILE = new File(FILENAME);
     private String IN = "in"; //default image input directory
     private String OUT = "out"; //default image output directory
+    private int MAX_THREADS = 12; //default number of threads ran parallelly
 
-    public ConfigHandler(Handler handler) {
-        this.handler = handler;
-
+    public ConfigHandler() {
         createConf();
         readConf();
         checkOutputFolder();
@@ -32,6 +29,11 @@ public class ConfigHandler {
             System.out.println("READING CONFIG");
             while (sc.hasNextLine()) {
                 s = sc.nextLine();
+
+                if(s.startsWith("#")){
+                    continue;
+                }
+
                 if(s.contains("IN:")){
                     IN = s.replace("IN:", "");
                     IN = IN.replaceAll(" ", ""); // make sure there are no whitespaces
@@ -41,6 +43,10 @@ public class ConfigHandler {
                     OUT = s.replace("OUT:", "");
                     OUT = OUT.replaceAll(" ", ""); // make sure there are no whitespaces
                     System.out.println("Set output folder as: "+ OUT);
+                }
+                if(s.contains("MAX_THREADS:")){
+                    MAX_THREADS = Integer.parseInt(s.replace("MAX_THREADS:", ""));
+                    System.out.println("Set maximum threads as: " + MAX_THREADS);
                 }
             }
         }catch(FileNotFoundException f){
@@ -66,6 +72,8 @@ public class ConfigHandler {
                 myWriter.write("#Specify input and output directory here\n");
                 myWriter.write("IN:" + IN + "\n");
                 myWriter.write("OUT:"+ OUT + "\n");     //Write default values to config file
+                myWriter.write("#\n#\n#Specify maximum threads to run during image processing\n");
+                myWriter.write("MAX_THREADS:" + MAX_THREADS);
                 myWriter.close();
                 System.out.println("A default config file has been created " +
                         "with values:\n" +
@@ -95,6 +103,10 @@ public class ConfigHandler {
 
     public String getOutputFolder(){
         return OUT;
+    }
+
+    public int getMaxThreads() {
+        return MAX_THREADS;
     }
 
 }

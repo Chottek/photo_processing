@@ -8,8 +8,6 @@ import java.util.List;
 
 public class ImgReader {
 
-    private Handler handler;
-
     private static final String[] EXTENSIONS = new String[]{ "png", "jpg", "jpeg" }; //handled extensions
 
     private static final FilenameFilter FILTER = (dir, name) -> { // overridden method filtering extensions
@@ -24,9 +22,8 @@ public class ImgReader {
     private List<File> images;
 
     public ImgReader(Handler handler) {
-        this.handler = handler;
         images = new ArrayList<>();
-        readPhotos(new File(handler.getProcessor().getConfigHandler().getInputFolder()));
+        readPhotos(new File(handler.getImageFileProcessor().getConfigHandler().getInputFolder()));
     }
 
     public void readPhotos(File dir){ //Method for reading photos from given directory

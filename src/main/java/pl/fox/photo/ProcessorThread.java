@@ -53,9 +53,14 @@ public class ProcessorThread implements Runnable {
     private void copy(File f, BufferedImage b, String db, int percentage){
         String name = getPureName(f.getName());  // get name without extension
         String extension = f.getName().substring(f.getName().lastIndexOf(".") + 1); // get extension
-        try { // copy images to given output directory with suitable names
-            ImageIO.write(b, extension, new File(outputFolder +
-                    "/" + name + "_" + db + "_" + percentage + "." + extension));
+        try {
+            String pathname = outputFolder + // copy images to given output directory with suitable names
+                    "/" + name +
+                    "_" + db +
+                    "_" + percentage +
+                    "." + extension;
+
+            ImageIO.write(b, extension, new File(pathname));
         } catch (IOException e) {
             System.err.println("There was a problem copying file " + f.getName() + " to output directory");
         }

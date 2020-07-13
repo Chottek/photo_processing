@@ -8,7 +8,7 @@ public class Main {
     private static final int UPPER_BORDER = 100;
 
     public static void main(String[] args) {
-        Processor p = new Processor();
+        ImageFileProcessor p = new ImageFileProcessor();
         p.process(setBorderValue());
     }
 
