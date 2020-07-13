@@ -29,8 +29,8 @@ public class ProcessorThread implements Runnable {
 
         long sum = 0;
         int iter = 0;
-        for (int i = 0; i < b.getHeight() ; i+= 4) {
-            for (int j = 0; j < b.getWidth() ; j+= 4) {
+        for (int i = 0; i < b.getHeight() ; i+= 4) {  //iteration
+            for (int j = 0; j < b.getWidth() ; j+= 4) { // based on sampling
                 sum += calculateRGB(b.getRGB(j, i));
                 iter++;
             }
@@ -39,7 +39,6 @@ public class ProcessorThread implements Runnable {
         // 765 - 100%  <- (255 * 3)
         // 99 - x %
         // x = (100 * 99) / 765
-
         int percentage = (int) (100 - (100 * (sum / iter)) / 765);
 
         if(percentage > borderValue){

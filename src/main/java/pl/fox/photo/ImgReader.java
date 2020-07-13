@@ -14,7 +14,7 @@ public class ImgReader {
 
     private static final FilenameFilter FILTER = (dir, name) -> { // overridden method filtering extensions
         for(String s : EXTENSIONS){
-            if(name.endsWith("." + s)){
+            if(name.toUpperCase().endsWith("." + s.toUpperCase())){ //checking if any extension matches, ex. (jpg and JPG)
                 return true;
             }
         }

@@ -9,6 +9,15 @@ repositories {
     mavenCentral()
 }
 
+task fatJar(type: Jar) { //making an executable jar file
+    manifest {
+        attributes 'Main-Class': 'pl.fox.photo.Main'
+    }
+    baseName = 'Photo_Processing'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
