@@ -55,6 +55,9 @@ public class ProcessorThread implements Runnable {
         }
 
         handler.getImageFileProcessor().removeImage(f);
+
+        LOG.info("Processed ({} of {}) -> {}",(Math.abs(handler.getImageFileProcessor().getFullListSize() - handler.getImageFileProcessor().getActiveListSize())),
+                handler.getImageFileProcessor().getFullListSize(),f.getName());
     }
 
     private void copy(File f, BufferedImage b, String db, int percentage){
@@ -70,9 +73,7 @@ public class ProcessorThread implements Runnable {
             ImageIO.write(b, extension, new File(pathname));
         } catch (IOException e) {
             LOG.error("There was a problem copying {} to output directory", f.getName());
-            return;
         }
-        LOG.info("Processed {}", f.getName());
     }
 
     private String getPureName(String s){

@@ -10,6 +10,10 @@ public class ImageFileProcessor implements IProcessor {
     private final ConfigHandler configHandler;
     private final Handler handler;
 
+    private ExecutorService pool; //for testing purposes only
+
+    private int listSize;
+
     public ImageFileProcessor() {
         handler = new Handler(this);
         configHandler = new ConfigHandler();
@@ -18,7 +22,8 @@ public class ImageFileProcessor implements IProcessor {
 
     @Override
     public void process(int borderValue) {
-        ExecutorService pool = Executors.newFixedThreadPool(configHandler.getMaxThreads());
+        pool = Executors.newFixedThreadPool(configHandler.getMaxThreads());
+        listSize = imgReader.getImages().size();
         for (File f : imgReader.getImages()) {
             Runnable r = new ProcessorThread(f, borderValue, configHandler.getOutputFolder(), handler);
             pool.execute(r);
@@ -32,5 +37,17 @@ public class ImageFileProcessor implements IProcessor {
 
     public void removeImage(File f){
         imgReader.getImages().remove(f);
+    }
+
+    public ExecutorService getPool(){
+        return pool;  // for testing purposes only
+    }
+
+    public int getActiveListSize(){
+        return imgReader.getImages().size();
+    }
+
+    public int getFullListSize(){
+        return listSize;
     }
 }
