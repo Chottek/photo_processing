@@ -1,8 +1,8 @@
 package pl.fox.photo;
 
-public class Handler { //Class made to pass data through classes without StackOverFlow error
+public class Handler { //Class made to pass data back and forth between classes without StackOverFlow error
 
-    private ImageFileProcessor imageFileProcessor;
+    private final ImageFileProcessor imageFileProcessor;
 
     public Handler(ImageFileProcessor imageFileProcessor){
         this.imageFileProcessor = imageFileProcessor;
